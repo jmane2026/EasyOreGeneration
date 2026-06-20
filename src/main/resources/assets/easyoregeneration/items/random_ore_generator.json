@@ -1,0 +1,6 @@
+{
+  "model": {
+    "type": "minecraft:model",
+    "model": "easyoregeneration:block/random_ore_generator"
+  }
+}

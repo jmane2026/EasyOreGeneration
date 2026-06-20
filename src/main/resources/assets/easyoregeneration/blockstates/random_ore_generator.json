@@ -1,0 +1,8 @@
+{
+  "variants": {
+    "facing=north": { "model": "easyoregeneration:block/random_ore_generator" },
+    "facing=south": { "model": "easyoregeneration:block/random_ore_generator", "y": 180 },
+    "facing=east":  { "model": "easyoregeneration:block/random_ore_generator", "y": 90 },
+    "facing=west":  { "model": "easyoregeneration:block/random_ore_generator", "y": 270 }
+  }
+}

@@ -1,0 +1,19 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "category": "misc",
+  "key": {
+    "P": "minecraft:piston",
+    "S": "minecraft:sticky_piston",
+    "D": "#c:gems/diamond",
+    "B": "#c:storage_blocks/iron"
+  },
+  "pattern": [
+    "BSB",
+    "DPD",
+    "BDB"
+  ],
+  "result": {
+    "count": 1,
+    "id": "easyoregeneration:precise_ore_generator"
+  }
+}

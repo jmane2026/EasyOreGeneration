@@ -1,0 +1,11 @@
+{
+  "itemGroup.easy_ore_generation_tab": "Easy Ore Generation",
+  "block.easyoregeneration.random_ore_generator": "Random Ore Generator",
+  "item.easyoregeneration.random_ore_generator": "Random Ore Generator",
+  "block.easyoregeneration.precise_ore_generator": "Precise Ore Generator",
+  "item.easyoregeneration.precise_ore_generator": "Precise Ore Generator",
+
+  "easyoregeneration.configuration.Easy Ore Generation Config": "Easy Ore Generation Config",
+  "easyoregeneration.configuration.generationSpeed": "Generation Speed",
+  "easyoregeneration.configuration.generationQuantity": "Generation Quantity"
+}
