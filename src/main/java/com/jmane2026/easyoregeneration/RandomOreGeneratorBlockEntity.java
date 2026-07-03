@@ -15,7 +15,7 @@ import java.util.List;
 
 public class RandomOreGeneratorBlockEntity extends BlockEntity {
     private int timer = 0;
-    private static final int DELAY = 100; // Check every 5 seconds (20 ticks = 1s)
+    private static final int DELAY = 100;
 
     private static final List<Block> ORES = List.of(
             Blocks.IRON_ORE, Blocks.GOLD_ORE, Blocks.DIAMOND_ORE,

@@ -90,6 +90,7 @@ public class EasyOreGeneration {
 
     public EasyOreGeneration(IEventBus modEventBus, ModContainer modContainer) {
         modEventBus.addListener(this::commonSetup);
+        modEventBus.addListener(this::registerCapabilities);
         modContainer.registerConfig(ModConfig.Type.COMMON, EasyOreGenConfig.SPEC);
         BLOCKS.register(modEventBus);
         ITEMS.register(modEventBus);
@@ -100,6 +101,14 @@ public class EasyOreGeneration {
 
     private void commonSetup(FMLCommonSetupEvent event) {
 
+    }
+
+    private void registerCapabilities(RegisterCapabilitiesEvent event) {
+        event.registerBlockEntity(
+                Capabilities.Item.BLOCK,
+                PRECISE_ORE_GENERATOR_BE.get(),
+                (be, side) -> be.getItemHandler(side)
+        );
     }
 
     @SubscribeEvent
