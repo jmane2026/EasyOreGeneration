@@ -14,7 +14,6 @@ import net.minecraft.network.protocol.game.ClientboundBlockEntityDataPacket;
 import net.minecraft.resources.Identifier;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.tags.TagKey;
-import net.minecraft.world.InteractionHand;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.block.entity.BlockEntity;
@@ -38,19 +37,21 @@ public class PreciseOreGeneratorBlockEntity extends BlockEntity {
 
     private ItemStack storedItem = ItemStack.EMPTY;
     private int count = 0;
+    private boolean upgraded = false;
 
-    private record PreciseSnapshot(ItemStack item, int count) {}
+    private record PreciseSnapshot(ItemStack item, int count, boolean upgraded) {}
 
     private final SnapshotJournal<PreciseSnapshot> journal = new SnapshotJournal<>() {
         @Override
         protected PreciseSnapshot createSnapshot() {
-            return new PreciseSnapshot(storedItem.copy(), count);
+            return new PreciseSnapshot(storedItem.copy(), count, upgraded);
         }
 
         @Override
         protected void revertToSnapshot(PreciseSnapshot snapshot) {
             storedItem = snapshot.item();
             count = snapshot.count();
+            upgraded = snapshot.upgraded();
         }
 
         @Override
@@ -121,7 +122,9 @@ public class PreciseOreGeneratorBlockEntity extends BlockEntity {
         timer++;
 
         int configuredSpeed = EasyOreGenConfig.GENERATION_SPEED.get();
-        if (timer >= configuredSpeed) {
+        int actualSpeed = upgraded ? Math.max(1, configuredSpeed / 2) : configuredSpeed;
+
+        if (timer >= actualSpeed) {
             timer = 0;
             processExtraction();
         }
@@ -208,6 +211,27 @@ public class PreciseOreGeneratorBlockEntity extends BlockEntity {
         }
     }
 
+    public boolean isUpgraded() {
+        return upgraded;
+    }
+
+    public ItemStack getStoredItem() {
+        return storedItem;
+    }
+
+    public int getCount() {
+        return count;
+    }
+
+    public boolean applyUpgrade() {
+        if (!upgraded) {
+            this.upgraded = true;
+            markUpdated();
+            return true;
+        }
+        return false;
+    }
+
     private void markUpdated() {
         this.setChanged();
 
@@ -221,6 +245,7 @@ public class PreciseOreGeneratorBlockEntity extends BlockEntity {
         super.saveAdditional(output);
         output.store("stored_item", ItemStack.OPTIONAL_CODEC, this.storedItem);
         output.putInt("count", this.count);
+        output.putBoolean("upgraded", this.upgraded);
     }
 
     @Override
@@ -228,6 +253,7 @@ public class PreciseOreGeneratorBlockEntity extends BlockEntity {
         super.loadAdditional(input);
         this.storedItem = input.read("stored_item", ItemStack.OPTIONAL_CODEC).orElse(ItemStack.EMPTY);
         this.count = input.getIntOr("count", 0);
+        this.upgraded = input.getBooleanOr("upgraded", false);
     }
 
     @Override
@@ -236,6 +262,7 @@ public class PreciseOreGeneratorBlockEntity extends BlockEntity {
         ItemStack.OPTIONAL_CODEC.encodeStart(registries.createSerializationContext(NbtOps.INSTANCE), this.storedItem)
                 .ifSuccess(result -> tag.put("stored_item", result));
         tag.putInt("count", this.count);
+        tag.putBoolean("upgraded", this.upgraded);
         return tag;
     }
 

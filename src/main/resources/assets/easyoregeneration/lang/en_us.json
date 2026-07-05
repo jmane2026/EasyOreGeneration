@@ -4,6 +4,11 @@
   "item.easyoregeneration.random_ore_generator": "Random Ore Generator",
   "block.easyoregeneration.precise_ore_generator": "Precise Ore Generator",
   "item.easyoregeneration.precise_ore_generator": "Precise Ore Generator",
+  "block.easyoregeneration.water_generator": "Water Generator",
+  "item.easyoregeneration.water_generator": "Water Generator",
+  "block.easyoregeneration.lava_generator": "Lava Generator",
+  "item.easyoregeneration.lava_generator": "Lava Generator",
+  "item.easyoregeneration.upgrade_card": "Upgrade Card",
 
   "easyoregeneration.configuration.Easy Ore Generation Config": "Easy Ore Generation Config",
   "easyoregeneration.configuration.generationSpeed": "Generation Speed",

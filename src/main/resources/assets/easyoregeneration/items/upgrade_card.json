@@ -1,0 +1,6 @@
+{
+  "model": {
+    "type": "minecraft:model",
+    "model": "easyoregeneration:item/upgrade_card"
+  }
+}

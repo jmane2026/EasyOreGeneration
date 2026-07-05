@@ -1,0 +1,21 @@
+{
+  "parent": "minecraft:block/block",
+  "textures": {
+    "atlas": "easyoregeneration:block/water_generator",
+    "particle": "easyoregeneration:block/water_generator"
+  },
+  "elements": [
+    {
+      "from": [0, 0, 0],
+      "to": [16, 16, 16],
+      "faces": {
+        "up":    { "uv": [8.02, 0.02, 15.98, 15.98], "texture": "#atlas" },
+        "down":  { "uv": [0.02, 0.02, 7.98, 15.98],  "texture": "#atlas" },
+        "north": { "uv": [0.02, 0.02, 7.98, 15.98],  "texture": "#atlas" },
+        "south": { "uv": [0.02, 0.02, 7.98, 15.98],  "texture": "#atlas" },
+        "east":  { "uv": [0.02, 0.02, 7.98, 15.98],  "texture": "#atlas" },
+        "west":  { "uv": [0.02, 0.02, 7.98, 15.98],  "texture": "#atlas" }
+      }
+    }
+  ]
+}

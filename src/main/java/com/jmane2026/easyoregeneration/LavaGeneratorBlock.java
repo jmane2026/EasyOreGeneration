@@ -1,5 +1,6 @@
 package com.jmane2026.easyoregeneration;
 
+import com.mojang.serialization.MapCodec;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.world.Containers;
@@ -9,42 +10,31 @@ import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.context.BlockPlaceContext;
 import net.minecraft.world.level.Level;
+import net.minecraft.world.level.block.BaseEntityBlock;
 import net.minecraft.world.level.block.Block;
-import net.minecraft.world.level.block.EntityBlock;
+import net.minecraft.world.level.block.RenderShape;
 import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.block.entity.BlockEntityTicker;
 import net.minecraft.world.level.block.entity.BlockEntityType;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.block.state.StateDefinition;
+import net.minecraft.world.level.block.state.properties.BlockStateProperties;
 import net.minecraft.world.level.block.state.properties.EnumProperty;
 import net.minecraft.world.level.material.FluidState;
 import net.minecraft.world.phys.BlockHitResult;
+import org.jetbrains.annotations.Nullable;
 
-import javax.annotation.Nullable;
-import java.awt.*;
+public class LavaGeneratorBlock extends BaseEntityBlock {
+    public static final EnumProperty<Direction> FACING = BlockStateProperties.HORIZONTAL_FACING;
 
-public class PreciseOreGeneratorBlock extends Block implements EntityBlock {
-    public static final EnumProperty<Direction> FACING = EnumProperty.create("facing", Direction.class, Direction.Plane.HORIZONTAL);
-
-    public PreciseOreGeneratorBlock(Properties props) {
-        super(props);
+    public LavaGeneratorBlock(Properties properties) {
+        super(properties);
         this.registerDefaultState(this.stateDefinition.any().setValue(FACING, Direction.NORTH));
     }
 
-    @Nullable
     @Override
-    public BlockEntity newBlockEntity(BlockPos pos, BlockState state) {
-        return new PreciseOreGeneratorBlockEntity(pos, state);
-    }
-
-    @Nullable
-    @Override
-    public <T extends BlockEntity> BlockEntityTicker<T> getTicker(Level level, BlockState state, BlockEntityType<T> type) {
-        return level.isClientSide() ? null : (lvl, pos, st, be) -> {
-            if (be instanceof PreciseOreGeneratorBlockEntity extractor) {
-                extractor.tick();
-            }
-        };
+    protected MapCodec<? extends BaseEntityBlock> codec() {
+        return simpleCodec(LavaGeneratorBlock::new);
     }
 
     @Override
@@ -52,15 +42,36 @@ public class PreciseOreGeneratorBlock extends Block implements EntityBlock {
         builder.add(FACING);
     }
 
+    @Nullable
     @Override
     public BlockState getStateForPlacement(BlockPlaceContext context) {
         return this.defaultBlockState().setValue(FACING, context.getHorizontalDirection().getOpposite());
     }
 
     @Override
+    public RenderShape getRenderShape(BlockState state) {
+        return RenderShape.MODEL;
+    }
+
+    @Nullable
+    @Override
+    public BlockEntity newBlockEntity(BlockPos pos, BlockState state) {
+        return new LavaGeneratorBlockEntity(pos, state);
+    }
+
+    @Nullable
+    @Override
+    public <T extends BlockEntity> BlockEntityTicker<T> getTicker(Level level, BlockState state, BlockEntityType<T> type) {
+        if (level.isClientSide()) return null;
+        return createTickerHelper(type, EasyOreGeneration.LAVA_GENERATOR_BE.get(), (level1, pos, state1, blockEntity) -> {
+            if (blockEntity instanceof LavaGeneratorBlockEntity be) be.tick();
+        });
+    }
+
+    @Override
     protected InteractionResult useItemOn(ItemStack stack, BlockState state, Level level, BlockPos pos, Player player, InteractionHand hand, BlockHitResult hitResult) {
         BlockEntity be = level.getBlockEntity(pos);
-        if (be instanceof PreciseOreGeneratorBlockEntity generator) {
+        if (be instanceof LavaGeneratorBlockEntity generator) {
             if (hand != InteractionHand.MAIN_HAND) return InteractionResult.PASS;
 
             if (stack.is(EasyOreGeneration.UPGRADE_CARD.get())) {
@@ -79,18 +90,11 @@ public class PreciseOreGeneratorBlock extends Block implements EntityBlock {
         return InteractionResult.PASS;
     }
 
-    @Override
     public boolean onDestroyedByPlayer(BlockState state, Level level, BlockPos pos, Player player, ItemStack toolStack, boolean willHarvest, FluidState fluid) {
         BlockEntity be = level.getBlockEntity(pos);
-        if (be instanceof PreciseOreGeneratorBlockEntity generator) {
-            // Drop Upgrade Card
+        if (be instanceof LavaGeneratorBlockEntity generator) {
             if (generator.isUpgraded()) {
                 Containers.dropItemStack(level, pos.getX(), pos.getY(), pos.getZ(), new ItemStack(EasyOreGeneration.UPGRADE_CARD.get()));
-            }
-            // Drop stored internal ores
-            if (generator.getCount() > 0 && !generator.getStoredItem().isEmpty()) {
-                ItemStack toDrop = generator.getStoredItem().copyWithCount(generator.getCount());
-                Containers.dropItemStack(level, pos.getX(), pos.getY(), pos.getZ(), toDrop);
             }
         }
         return super.onDestroyedByPlayer(state, level, pos, player, toolStack, willHarvest, fluid);

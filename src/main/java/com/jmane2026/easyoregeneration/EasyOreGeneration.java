@@ -53,6 +53,12 @@ public class EasyOreGeneration {
     public static final DeferredBlock<PreciseOreGeneratorBlock> PRECISE_ORE_GENERATOR = BLOCKS.register("precise_ore_generator",
             registryName -> new PreciseOreGeneratorBlock(BlockBehaviour.Properties.of().setId(ResourceKey.create(Registries.BLOCK, registryName)).strength(3.0f)));
 
+    public static final DeferredBlock<WaterGeneratorBlock> WATER_GENERATOR = BLOCKS.register("water_generator",
+            registryName -> new WaterGeneratorBlock(BlockBehaviour.Properties.of().setId(ResourceKey.create(Registries.BLOCK, registryName)).strength(3.0f)));
+
+    public static final DeferredBlock<LavaGeneratorBlock> LAVA_GENERATOR = BLOCKS.register("lava_generator",
+            registryName -> new LavaGeneratorBlock(BlockBehaviour.Properties.of().setId(ResourceKey.create(Registries.BLOCK, registryName)).strength(3.0f)));
+
     public static final Supplier<BlockEntityType<RandomOreGeneratorBlockEntity>> ORE_GEN_TYPE = BLOCK_ENTITIES.register(
             "random_ore_generator_be",
             () -> new BlockEntityType<>(
@@ -71,11 +77,38 @@ public class EasyOreGeneration {
                     )
             );
 
+    public static final DeferredHolder<BlockEntityType<?>, BlockEntityType<WaterGeneratorBlockEntity>> WATER_GENERATOR_BE =
+            BLOCK_ENTITIES.register("water_generator",
+                    () -> new BlockEntityType<>(
+                            WaterGeneratorBlockEntity::new,
+                            false,
+                            WATER_GENERATOR.get()
+                    )
+            );
+
+    public static final DeferredHolder<BlockEntityType<?>, BlockEntityType<LavaGeneratorBlockEntity>> LAVA_GENERATOR_BE =
+            BLOCK_ENTITIES.register("lava_generator",
+                    () -> new BlockEntityType<>(
+                            LavaGeneratorBlockEntity::new,
+                            false,
+                            LAVA_GENERATOR.get()
+                    )
+            );
+
     public static final DeferredItem<Item> RANDOM_ORE_GENERATOR_ITEM = ITEMS.register("random_ore_generator",
             registryName -> new BlockItem(RANDOM_ORE_GENERATOR.get(), new Item.Properties().setId(ResourceKey.create(Registries.ITEM, registryName))));
 
     public static final DeferredItem<Item> PRECISE_ORE_GENERATOR_ITEM = ITEMS.register("precise_ore_generator",
             registryName -> new BlockItem(PRECISE_ORE_GENERATOR.get(), new Item.Properties().setId(ResourceKey.create(Registries.ITEM, registryName))));
+
+    public static final DeferredItem<Item> UPGRADE_CARD = ITEMS.register("upgrade_card",
+            registryName -> new Item(new Item.Properties().stacksTo(64).setId(ResourceKey.create(Registries.ITEM, registryName))));
+
+    public static final DeferredItem<Item> WATER_GENERATOR_ITEM = ITEMS.register("water_generator",
+            registryName -> new BlockItem(WATER_GENERATOR.get(), new Item.Properties().setId(ResourceKey.create(Registries.ITEM, registryName))));
+
+    public static final DeferredItem<Item> LAVA_GENERATOR_ITEM = ITEMS.register("lava_generator",
+            registryName -> new BlockItem(LAVA_GENERATOR.get(), new Item.Properties().setId(ResourceKey.create(Registries.ITEM, registryName))));
 
     public static final Supplier<CreativeModeTab> EASY_ORE_GEN_TAB = CREATIVE_MODE_TABS.register("easy_ore_generation_tab",
             () -> CreativeModeTab.builder()
@@ -84,6 +117,9 @@ public class EasyOreGeneration {
                     .displayItems((parameters, output) -> {
                         output.accept(RANDOM_ORE_GENERATOR_ITEM.get());
                         output.accept(PRECISE_ORE_GENERATOR_ITEM.get());
+                        output.accept(WATER_GENERATOR_ITEM.get());
+                        output.accept(LAVA_GENERATOR_ITEM.get());
+                        output.accept(UPGRADE_CARD.get());
                     })
                     .build()
     );
@@ -108,6 +144,18 @@ public class EasyOreGeneration {
                 Capabilities.Item.BLOCK,
                 PRECISE_ORE_GENERATOR_BE.get(),
                 (be, side) -> be.getItemHandler(side)
+        );
+
+        event.registerBlockEntity(
+                Capabilities.Fluid.BLOCK,
+                WATER_GENERATOR_BE.get(),
+                (be, side) -> be.getFluidHandler(side)
+        );
+
+        event.registerBlockEntity(
+                Capabilities.Fluid.BLOCK,
+                LAVA_GENERATOR_BE.get(),
+                (be, side) -> be.getFluidHandler(side)
         );
     }
 

@@ -1,0 +1,19 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "category": "misc",
+  "key": {
+    "P": "minecraft:piston",
+    "W": "minecraft:water_bucket",
+    "D": "#c:gems/diamond",
+    "B": "#c:storage_blocks/iron"
+  },
+  "pattern": [
+    "BPB",
+    "DWD",
+    "BDB"
+  ],
+  "result": {
+    "count": 1,
+    "id": "easyoregeneration:water_generator"
+  }
+}

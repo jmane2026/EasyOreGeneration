@@ -1,0 +1,18 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "category": "misc",
+  "key": {
+    "C": "minecraft:chest",
+    "D": "#c:gems/diamond",
+    "B": "#c:storage_blocks/iron"
+  },
+  "pattern": [
+    "BDB",
+    "DCD",
+    "BDB"
+  ],
+  "result": {
+    "count": 1,
+    "id": "easyoregeneration:upgrade_card"
+  }
+}

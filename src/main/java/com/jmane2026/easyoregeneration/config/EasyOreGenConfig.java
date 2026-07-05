@@ -13,7 +13,7 @@ public class EasyOreGenConfig {
         BUILDER.push("Easy Ore Generation Config");
 
         GENERATION_SPEED = BUILDER
-                .comment("Controls the speed of the Precise Ore Generator (in ticks)")
+                .comment("Controls the speed of the Generators (in ticks)")
                 .defineInRange("generationSpeed", 20, 1, 100);
 
         GENERATION_QUANTITY = BUILDER

@@ -1,0 +1,8 @@
+{
+  "variants": {
+    "facing=north": { "model": "easyoregeneration:block/water_generator" },
+    "facing=south": { "model": "easyoregeneration:block/water_generator", "y": 180 },
+    "facing=east":  { "model": "easyoregeneration:block/water_generator", "y": 90 },
+    "facing=west":  { "model": "easyoregeneration:block/water_generator", "y": 270 }
+  }
+}
